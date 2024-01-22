@@ -42,17 +42,18 @@ except Exception as e:
 user_query = st.text_input(label='Search for the product you need ')
 top_k = st.number_input(label='top_k', min_value=1, max_value=10, step=1, value=5)
 
-with st.spinner("getting products.... "):
-    user_query_embedding = model.encode(user_query).tolist()
-    products = index.query(vector = user_query_embedding, 
-                           top_k = top_k,
-                           include_metadata=True)
+if user_query:
+    with st.spinner("getting products.... "):
+        user_query_embedding = model.encode(user_query).tolist()
+        products = index.query(vector = user_query_embedding, 
+                            top_k = top_k,
+                            include_metadata=True)
 
-    for product in products['matches']:
-        st.markdown(f"**{product['id']}** --- **{product['metadata']['name']}**")
-        st.markdown(f"Confidence Score: **{product['score']}**")
-        st.image(Image.open(url_to_bytes(product['metadata']['image'])))
-        st.divider()
+        for product in products['matches']:
+            st.markdown(f"**{product['id']}** --- **{product['metadata']['name']}**")
+            st.markdown(f"Confidence Score: **{product['score']}**")
+            st.image(Image.open(url_to_bytes(product['metadata']['Image'])))
+            st.divider()
 
 
 
