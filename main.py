@@ -26,26 +26,6 @@ def url_to_bytes(url: str) -> BytesIO:
     response = requests.get(url)
     return BytesIO(response.content)
 
-class ProductNode:
-    """
-        Initializes the object with the provided id, score, image, name, and metadata.
-
-        Args:
-            id (str): The identifier for the object.
-            score (str): The score associated with the object.
-            image (str): The image associated with the object.
-            name (str): The name associated with the object.
-            metadata (dict): Additional metadata for the object.
-
-        Returns:
-            None
-    """
-    def __init__(self, id: str, score: str, image: str, name: str,metadata: dict):
-        self.id = id
-        self.score = score 
-        self.image = metadata['image']
-        self.name = metadata['name']
-
 
 #init pinecone client 
 pc = Pinecone(api_key=API_KEY)
@@ -69,10 +49,9 @@ with st.spinner("getting products.... "):
                            include_metadata=True)
 
     for product in products['matches']:
-        prd_node = ProductNode(**product)
-        st.markdown(f"**{prd_node.name}**")
-        st.markdown(f"**{prd_node.score}**")
-        st.image(Image.open(url_to_bytes(prd_node.image)))
+        st.markdown(f"**{product['id']}** --- **{product['metadata']['name']}**")
+        st.markdown(f"Confidence Score: **{product['score']}**")
+        st.image(Image.open(url_to_bytes(product['metadata']['image'])))
         st.divider()
 
 
