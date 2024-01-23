@@ -33,12 +33,16 @@ index = pc.Index(DB)
 
 st.header("Indus Valley Search Engine")
 
-#loading the model 
-try:
-    model = SentenceTransformer('./all-mpnet-base-v2',device='cpu')
-except Exception as e:
-    print(e)
+@st.cache_resource
+def load_model():
+    #loading the model 
+    try:
+        model = SentenceTransformer('./all-mpnet-base-v2',device='cpu')
+        return model
+    except Exception as e:
+        print(e)
 
+model = load_model()
 user_query = st.text_input(label='Search for the product you need ')
 top_k = st.number_input(label='top_k', min_value=1, max_value=10, step=1, value=5)
 
